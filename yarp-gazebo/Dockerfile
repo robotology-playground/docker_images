@@ -11,3 +11,8 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable xenial main
         gazebo8-plugin-base \
         libgazebo8-dev &&\
     rm -rf /var/lib/apt/lists/*
+
+# Include a custom entrypoint script
+COPY entrypoint.sh /usr/sbin/entrypoint.sh
+RUN chmod 755 /usr/sbin/entrypoint.sh
+ENTRYPOINT ["/usr/sbin/entrypoint.sh"]
