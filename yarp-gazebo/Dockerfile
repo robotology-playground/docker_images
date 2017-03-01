@@ -11,22 +11,3 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable xenial main
         gazebo8-plugin-base \
         libgazebo8-dev &&\
     rm -rf /var/lib/apt/lists/*
-
-# Concurrent compilation jobs
-ENV GCC_JOBS=4
-
-# Install useful tools
-RUN apt-get update &&\
-    apt-get install -y --no-install-recommends \
-        git \
-		  cmake &&\
-    rm -rf /var/lib/apt/lists/*
-
-# Install yarp-gazebo-plugin
-RUN git clone https://github.com/robotology/gazebo-yarp-plugins.git &&\
-    cd gazebo-yarp-plugins &&\
-    mkdir build && cd build &&\
-    cmake .. &&\
-    make -j ${GCC_JOBS} install &&\
-	 cd ../.. &&\
-	 rm -r gazebo-yarp-plugins
