@@ -5,6 +5,7 @@ MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
         build-essential \
+        ccache \
         git &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -30,8 +31,13 @@ RUN git clone https://github.com/robotology/icub-tests &&\
     make install
 
 RUN git clone https://github.com/robotology-playground/icub-gazebo
+
+# Set environment variables for YARP and Gazebo
 ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/icub-tests/suits
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/icub-tests/build/plugins
 RUN ldconfig
 ENV GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/icub-gazebo
 ENV GAZEBO_RESOURCE_PATH=${GAZEBO_RESOURCE_PATH}:/icub-gazebo
+
+# Enable ccache
+ENV PATH=/usr/lib/ccache:$PATH
