@@ -6,6 +6,8 @@ RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
         build-essential \
         ccache \
+        llvm \
+        clang \
         git &&\
     rm -rf /var/lib/apt/lists/*
 
