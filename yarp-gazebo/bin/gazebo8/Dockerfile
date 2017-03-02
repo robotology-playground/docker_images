@@ -1,4 +1,4 @@
-FROM robotology/yarp
+FROM robotology/yarp:bin
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 # Install gazebo8

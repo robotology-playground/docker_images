@@ -1,4 +1,4 @@
-FROM robotology/yarp-git:master
+FROM robotology/yarp:master
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 # Install gazebo7
