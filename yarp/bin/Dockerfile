@@ -12,7 +12,7 @@ RUN echo "deb http://www.icub.org/ubuntu xenial contrib/science" \
 # Check YARP installation
 RUN yarp check
 
-# TODO: YARP port management
+# YARP ports management
 EXPOSE 10000/tcp
 
 # Some QT-Apps don't show controls without this

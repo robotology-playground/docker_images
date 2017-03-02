@@ -1,11 +1,11 @@
-FROM robotology/yarp-gazebo:gazebo8
+FROM robotology/yarp-gazebo:gazebo7bin
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 # Install build tools
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
         build-essential \
-		  git &&\
+        git &&\
     rm -rf /var/lib/apt/lists/*
 
 # Install the testing frameworks
