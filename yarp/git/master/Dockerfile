@@ -8,7 +8,7 @@ ARG YARP_BUILD_TYPE=Release
 RUN apt-get update && apt-get install -y \
         build-essential \
         git \
-		  cmake &&\
+        cmake &&\
     rm -rf /var/lib/apt/lists/*
 
 # Install libraries
@@ -17,7 +17,7 @@ RUN apt-get update &&\
         libgsl-dev \
         libedit-dev \
         libace-dev \
-		  libeigen3-dev &&\
+        libeigen3-dev &&\
     rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/robotology/yarp.git &&\
