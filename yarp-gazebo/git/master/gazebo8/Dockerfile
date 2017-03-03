@@ -1,6 +1,12 @@
 FROM robotology/yarp:master
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
+# Install tools
+RUN apt-get update &&\
+    apt-get install -y --no-install-recommends \
+        wget &&\
+    rm -rf /var/lib/apt/lists/*
+
 # Install gazebo8
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable xenial main" \
         > /etc/apt/sources.list.d/gazebo-stable.list &&\
