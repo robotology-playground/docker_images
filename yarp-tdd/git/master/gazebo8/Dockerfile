@@ -34,6 +34,15 @@ RUN git clone https://github.com/robotology/icub-tests &&\
 
 RUN git clone https://github.com/robotology-playground/icub-gazebo
 
+# Install YCM
+RUN git clone https://github.com/robotology/ycm.git &&\
+    cd ycm &&\
+    mkdir build && cd build &&\
+    cmake -DCMAKE_BUILD_TYPE=Release\
+          .. &&\
+    make &&\
+    make install
+
 # Set environment variables for YARP and Gazebo
 ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/icub-tests/suits
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/icub-tests/build/plugins
