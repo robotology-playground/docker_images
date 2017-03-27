@@ -8,7 +8,9 @@ RUN apt-get update &&\
         ccache \
         llvm \
         clang \
-        git &&\
+        git \
+        ninja-build \
+        &&\
     rm -rf /var/lib/apt/lists/*
 
 # Install the testing frameworks
