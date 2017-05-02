@@ -13,6 +13,7 @@ RUN apt-get update &&\
         clang \
         git \
         ninja-build \
+        liblua5.3-dev \
         &&\
     rm -rf /var/lib/apt/lists/*
 
