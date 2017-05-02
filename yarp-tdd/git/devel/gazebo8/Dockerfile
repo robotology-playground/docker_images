@@ -30,6 +30,18 @@ RUN git clone https://github.com/robotology/robot-testing &&\
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 RUN ldconfig
 
+# YARP has the optional support of RTF.
+# The installed version of YARP was installed without this support, so rebuilding YARP is needed
+RUN git clone https://github.com/robotology/yarp.git &&\
+    cd yarp &&\
+    git checkout $GIT_BRANCH &&\
+    mkdir build && cd build &&\
+    cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+          -DCREATE_LIB_MATH=ON \
+          -DYARP_COMPILE_RTF_ADDONS:BOOL=ON \
+          .. &&\
+    make install
+
 RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
     git checkout $GIT_BRANCH &&\
