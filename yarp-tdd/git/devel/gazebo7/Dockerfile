@@ -1,6 +1,9 @@
 FROM robotology/yarp-gazebo:gazebo7devel
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
+ARG GIT_BRANCH=devel
+ARG BUILD_TYPE=Release
+
 # Install build tools
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
@@ -16,9 +19,10 @@ RUN apt-get update &&\
 # Install the testing frameworks
 RUN git clone https://github.com/robotology/robot-testing &&\
     cd robot-testing &&\
+    git checkout $GIT_BRANCH &&\
     mkdir build && cd build &&\
     cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install
@@ -27,20 +31,23 @@ RUN ldconfig
 
 RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
+    git checkout $GIT_BRANCH &&\
     mkdir build && cd build &&\
     cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install
 
-RUN git clone https://github.com/robotology-playground/icub-gazebo
+RUN git clone https://github.com/robotology-playground/icub-gazebo &&\
+    git checkout $GIT_BRANCH
 
 # Install YCM
 RUN git clone https://github.com/robotology/ycm.git &&\
     cd ycm &&\
+    git checkout $GIT_BRANCH &&\
     mkdir build && cd build &&\
-    cmake -DCMAKE_BUILD_TYPE=Release\
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install

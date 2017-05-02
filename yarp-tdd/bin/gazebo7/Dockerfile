@@ -1,6 +1,8 @@
 FROM robotology/yarp-gazebo:gazebo7bin
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
+ARG BUILD_TYPE=Release
+
 # Install build tools
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends \
@@ -18,7 +20,7 @@ RUN git clone https://github.com/robotology/robot-testing &&\
     cd robot-testing &&\
     mkdir build && cd build &&\
     cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install
@@ -29,7 +31,7 @@ RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
     mkdir build && cd build &&\
     cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install
@@ -40,7 +42,7 @@ RUN git clone https://github.com/robotology-playground/icub-gazebo
 RUN git clone https://github.com/robotology/ycm.git &&\
     cd ycm &&\
     mkdir build && cd build &&\
-    cmake -DCMAKE_BUILD_TYPE=Release\
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE}\
           .. &&\
     make &&\
     make install
