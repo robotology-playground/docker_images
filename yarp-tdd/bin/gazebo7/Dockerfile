@@ -21,6 +21,7 @@ RUN git clone https://github.com/robotology/robot-testing &&\
     mkdir build && cd build &&\
     cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
           -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+          -DENABLE_LUA_PLUGIN:BOOL=ON \
           .. &&\
     make &&\
     make install
