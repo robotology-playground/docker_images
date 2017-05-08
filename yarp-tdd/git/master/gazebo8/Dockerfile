@@ -35,14 +35,12 @@ RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
     git checkout $GIT_BRANCH &&\
     mkdir build && cd build &&\
-    cmake -DENABLE_MIDDLEWARE_PLUGINS:BOOL=ON \
-          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           .. &&\
     make &&\
     make install
 
-RUN git clone https://github.com/robotology-playground/icub-gazebo &&\
-    git checkout $GIT_BRANCH
+RUN git clone https://github.com/robotology/icub-gazebo
 
 # Install YCM
 RUN git clone https://github.com/robotology/ycm.git &&\
