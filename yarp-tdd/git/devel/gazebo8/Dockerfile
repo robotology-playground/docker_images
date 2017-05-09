@@ -42,6 +42,7 @@ RUN git clone https://github.com/robotology/yarp.git &&\
           -DYARP_COMPILE_RTF_ADDONS:BOOL=ON \
           .. &&\
     make install
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/rtf
 
 RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
