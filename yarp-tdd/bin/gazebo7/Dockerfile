@@ -1,7 +1,7 @@
 FROM robotology/yarp-gazebo:gazebo7bin
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
-ARG BUILD_TYPE=Release
+ARG BUILD_TYPE=Debug
 
 # Install build tools
 RUN apt-get update &&\

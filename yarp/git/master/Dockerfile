@@ -2,7 +2,7 @@ FROM ubuntu:xenial
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 ARG YARP_BRANCH=master
-ARG YARP_BUILD_TYPE=Release
+ARG YARP_BUILD_TYPE=Debug
 
 # Install useful packages
 RUN apt-get update && apt-get install -y \

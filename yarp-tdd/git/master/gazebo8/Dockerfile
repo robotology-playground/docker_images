@@ -2,7 +2,7 @@ FROM robotology/yarp-gazebo:gazebo8master
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 ARG GIT_BRANCH=master
-ARG BUILD_TYPE=Release
+ARG BUILD_TYPE=Debug
 
 # Install build tools
 RUN apt-get update &&\
