@@ -31,8 +31,9 @@ RUN git clone https://github.com/robotology/robot-testing &&\
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 RUN ldconfig
 
-# YARP has the optional support of RTF.
-# The installed version of YARP was installed without this support, so rebuilding YARP is needed
+# The support of RTF is optional in YARP.
+# In the YARP images the RTF option is disabled by default, so in order to have it
+# we need to rebuild YARP
 RUN git clone https://github.com/robotology/yarp.git &&\
     cd yarp &&\
     git checkout $GIT_BRANCH &&\
