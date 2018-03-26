@@ -32,4 +32,4 @@ RUN git clone https://github.com/robotology/yarp.git &&\
     rm -r /yarp
 
 RUN yarp check
-EXPOSE 10000/tcp
+EXPOSE 10000/tcp 10000/udp

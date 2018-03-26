@@ -13,7 +13,7 @@ RUN echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" \
 RUN yarp check
 
 # YARP ports management
-EXPOSE 10000/tcp
+EXPOSE 10000/tcp 10000/udp
 
 # Some QT-Apps don't show controls without this
 ENV QT_X11_NO_MITSHM 1
