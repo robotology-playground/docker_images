@@ -33,3 +33,17 @@ RUN git clone https://github.com/robotology/yarp.git &&\
 
 RUN yarp check
 EXPOSE 10000/tcp 10000/udp
+
+# Some QT-Apps don't show controls without this
+ENV QT_X11_NO_MITSHM 1
+
+# Setup HW Acceleration for Intel graphic cards
+RUN apt-get update && apt-get install -y \
+        libgl1-mesa-glx \
+        libgl1-mesa-dri &&\
+    rm -rf /var/lib/apt/lists/*
+
+# nvidia-docker hooks
+LABEL com.nvidia.volumes.needed="nvidia_driver"
+ENV PATH /usr/local/nvidia/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
