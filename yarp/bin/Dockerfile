@@ -2,7 +2,7 @@ FROM ubuntu:xenial
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 # Install YARP
-RUN echo "deb http://www.icub.org/ubuntu xenial contrib/science" \
+RUN echo "deb http://www.icub.org/ubuntu `lsb_release -cs` contrib/science" \
         > /etc/apt/sources.list.d/icub.list &&\
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 57A5ACB6110576A6 &&\
     apt-get update &&\
