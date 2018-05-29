@@ -45,6 +45,15 @@ RUN git clone https://github.com/robotology/yarp.git &&\
     make install
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/rtf
 
+RUN git clone https://github.com/robotology/icub-main &&\
+    cd icub-main &&\
+    git checkout $GIT_BRANCH &&\
+    mkdir build && cd build &&\
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+          .. &&\
+    make &&\
+    make install
+
 RUN git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
     git checkout $GIT_BRANCH &&\
