@@ -1,0 +1,92 @@
+language: generic
+
+services:
+  - docker
+
+os:
+  - linux
+
+env:
+  global:
+    - DOCKER_BASE_IMAGE="ubuntu:bionic"
+    - DOCKER_EXTRA_BUILDARGS=""
+    - BRANCH=master
+    - BUILD_TYPE=Release
+    - CMAKE_GENERATOR=Ninja
+    - IS_LATEST=false
+
+stages:
+  # - yarp
+  # - icub
+  # - yarp-gazebo
+  # - yarp-tdd
+  - robotology-tdd
+
+script:
+  - cd $TRAVIS_BUILD_DIR/$IMAGE_FOLDER
+  - >-
+    docker build --rm \
+      --build-arg BASEIMAGE=$DOCKER_BASE_IMAGE $DOCKER_EXTRA_BUILDARGS \
+      -t robotology/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG \
+      .
+
+after_success:
+  - if ! [[ "$TRAVIS_REPO_SLUG" = "robotology-playground/docker_images" && "$TRAVIS_BRANCH" = "master" && "$TRAVIS_PULL_REQUEST" = "false" ]] ; then travis_terminate 0 ; fi
+  - docker login --username=$DOCKERHUB_USERNAME --password=$DOCKERHUB_PASSWORD
+  - docker push robotology/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+  - >-
+    if [ "$IS_LATEST" = "true" ] ; then
+      docker tag robotology/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG robotology/$DOCKER_IMAGE_NAME:latest
+      docker push robotology/$DOCKER_IMAGE_NAME:latest
+    fi
+
+jobs:
+  include:
+    # Disable test stage
+    - stage: test
+      if: env(DUMMYVAR) is present
+    # ROBOTOLOGY-TDD
+    - &robotologytddtemplate
+      stage: robotology-tdd
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo7master"
+        - GAZEBO_VER=7
+        - BRANCH=master
+        - IMAGE_FOLDER=robotology-tdd
+    - <<: *robotologytddtemplate
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo8master"
+        - GAZEBO_VER=8
+        - BRANCH=master
+        - IMAGE_FOLDER=robotology-tdd
+    - <<: *robotologytddtemplate
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo9master"
+        - GAZEBO_VER=9
+        - BRANCH=master
+        - IMAGE_FOLDER=robotology-tdd
+        - IS_LATEST=true
+    - <<: *robotologytddtemplate
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo7devel"
+        - GAZEBO_VER=7
+        - BRANCH=devel
+        - IMAGE_FOLDER=robotology-tdd
+    - <<: *robotologytddtemplate
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo8devel"
+        - GAZEBO_VER=8
+        - BRANCH=devel
+        - IMAGE_FOLDER=robotology-tdd
+    - <<: *robotologytddtemplate
+      env:
+        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_IMAGE_TAG="gazebo9devel"
+        - GAZEBO_VER=9
+        - BRANCH=devel
+        - IMAGE_FOLDER=robotology-tdd
