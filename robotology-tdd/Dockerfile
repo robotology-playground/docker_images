@@ -70,10 +70,12 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/robotology-superbuild.git &&\
     cd robotology-superbuild &&\
     mkdir build && cd build &&\
+    git config --global user.email "tdd@robotology.com" &&\
+    git config --global user.name "DockerUser" &&\
     cmake .. \
         -G "$CMAKE_GENERATOR" \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -DNON_INTERACTIVE_BUILD:BOOL=ON \
+        # -DNON_INTERACTIVE_BUILD:BOOL=ON \
         -DROBOTOLOGY_ENABLE_CORE:BOOL=ON \
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
@@ -90,7 +92,6 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     cmake . \
         -DYCM_EP_DEVEL_MODE_GazeboYARPPlugins:BOOL=ON \
         -DYCM_EP_DEVEL_MODE_ICUB:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_GazeboYARPPlugins:BOOL=ON \
         -DYCM_EP_DEVEL_MODE_RTF:BOOL=ON \
         -DYCM_EP_DEVEL_MODE_YARP:BOOL=ON \
         -DYCM_EP_DEVEL_MODE_YCM:BOOL=ON \
@@ -98,6 +99,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DYCM_EP_DEVEL_MODE_iDynTree:BOOL=ON \
         &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
+    rm -f $HOME/.gitconfig &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
 
 # The bashrc is read only when opening an interactive shell. Let other projects find packages contained
