@@ -59,6 +59,12 @@ RUN apt-get update &&\
 
 ARG PROJECTS_DIR=/projects
 
+# Setup entrypoint
+ARG ROBOTOLOGY_INITIALIZATION_FILE=/usr/local/bin/setup_robotology_tdd.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY setup.sh ${ROBOTOLOGY_INITIALIZATION_FILE}
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
 # Install the projects using the superbuild
 RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/robotology-superbuild.git &&\
@@ -92,8 +98,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DYCM_EP_DEVEL_MODE_iDynTree:BOOL=ON \
         &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
-    echo "source /usr/share/gazebo/setup.sh" >> $HOME/.bashrc &&\
-    echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $HOME/.bashrc
+    echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
 
 # The bashrc is read only when opening an interactive shell. Let other projects find packages contained
 # in the superbuild.
@@ -109,5 +114,9 @@ RUN cd ${PROJECTS_DIR} &&\
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
          &&\
     cmake --build . --target install -- ${CMAKE_EXTRA_OPTIONS}
-ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:/project/icub-tests/suits
-ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/project/icub-tests/build/plugins
+ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:${PROJECTS_DIR}/icub-tests/suits
+
+# Enable CCACHE by default
+ENV PATH=/usr/lib/ccache:$PATH
+RUN mkdir $HOME/.ccache &&\
+    echo "max_size = 2.0G" > $HOME/.ccache/ccache.conf
