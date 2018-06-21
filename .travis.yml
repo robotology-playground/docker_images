@@ -8,25 +8,21 @@ os:
 
 env:
   global:
-    - DOCKER_BASE_IMAGE="ubuntu:bionic"
-    - DOCKER_EXTRA_BUILDARGS=""
-    - BRANCH=master
-    - BUILD_TYPE=Release
-    - CMAKE_GENERATOR=Ninja
-    - IS_LATEST=false
+    - IMAGE_FOLDER=robotology-tdd
+    - DOCKER_IMAGE_NAME="robotology-tdd"
 
 stages:
-  # - yarp
-  # - icub
-  # - yarp-gazebo
-  # - yarp-tdd
   - robotology-tdd
 
 script:
   - cd $TRAVIS_BUILD_DIR/$IMAGE_FOLDER
   - >-
     docker build --rm \
-      --build-arg BASEIMAGE=$DOCKER_BASE_IMAGE $DOCKER_EXTRA_BUILDARGS \
+      --build-arg BASE_IMAGE=$DOCKER_BASE_IMAGE \
+      --build-arg GAZEBO_VER=$GAZEBO_VER \
+      --build-arg BRANCH=$BRANCH \
+      --build-arg CMAKE_GENERATOR="$CMAKE_GENERATOR" \
+      --build-arg CMAKE_EXTRA_OPTIONS=$CMAKE_EXTRA_OPTIONS \
       -t robotology/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG \
       .
 
@@ -45,48 +41,43 @@ jobs:
     # Disable test stage
     - stage: test
       if: env(DUMMYVAR) is present
+    # ==============
     # ROBOTOLOGY-TDD
+    # ==============
+    #
+    # ------
+    # MASTER
+    # ------
     - &robotologytddtemplate
       stage: robotology-tdd
       env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
-        - DOCKER_IMAGE_TAG="gazebo7master"
-        - GAZEBO_VER=7
-        - BRANCH=master
-        - IMAGE_FOLDER=robotology-tdd
-    - <<: *robotologytddtemplate
-      env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_BASE_IMAGE="ubuntu:xenial"
         - DOCKER_IMAGE_TAG="gazebo8master"
         - GAZEBO_VER=8
         - BRANCH=master
-        - IMAGE_FOLDER=robotology-tdd
+        - CMAKE_GENERATOR="Unix Makefiles"
     - <<: *robotologytddtemplate
       env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_BASE_IMAGE="ubuntu:bionic"
         - DOCKER_IMAGE_TAG="gazebo9master"
         - GAZEBO_VER=9
         - BRANCH=master
-        - IMAGE_FOLDER=robotology-tdd
+        - CMAKE_GENERATOR="Unix Makefiles"
         - IS_LATEST=true
+    # -----
+    # DEVEL
+    # -----
     - <<: *robotologytddtemplate
       env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
-        - DOCKER_IMAGE_TAG="gazebo7devel"
-        - GAZEBO_VER=7
-        - BRANCH=devel
-        - IMAGE_FOLDER=robotology-tdd
-    - <<: *robotologytddtemplate
-      env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_BASE_IMAGE="ubuntu:xenial"
         - DOCKER_IMAGE_TAG="gazebo8devel"
         - GAZEBO_VER=8
         - BRANCH=devel
-        - IMAGE_FOLDER=robotology-tdd
+        - CMAKE_GENERATOR="Unix Makefiles"
     - <<: *robotologytddtemplate
       env:
-        - DOCKER_IMAGE_NAME="robotology-tdd"
+        - DOCKER_BASE_IMAGE="ubuntu:bionic"
         - DOCKER_IMAGE_TAG="gazebo9devel"
         - GAZEBO_VER=9
         - BRANCH=devel
-        - IMAGE_FOLDER=robotology-tdd
+        - CMAKE_GENERATOR="Unix Makefiles"
