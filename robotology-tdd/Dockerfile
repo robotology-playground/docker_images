@@ -113,7 +113,8 @@ ENV CMAKE_PREFIX_PATH=${PROJECTS_DIR}/robotology-superbuild/build/install
 RUN cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/icub-tests &&\
     cd icub-tests &&\
-    git checkout ${BRANCH} &&\
+    # git checkout ${BRANCH} &&\
+    git checkout devel &&\
     mkdir build && cd build &&\
     cmake ..\
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
