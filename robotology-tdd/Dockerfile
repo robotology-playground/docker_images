@@ -83,7 +83,9 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     cmake --build . --target update-all -- -j4 &&\
     cd ../robotology &&\
     cd ICUB && git checkout devel && cd .. &&\
-    for repo in GazeboYARPPlugins RTF YARP YCM codyco-modules iDynTree ; do \
+    cd GazeboYARPPlugins && git checkout devel && cd .. &&\
+    cd codyco-modules && git checkout devel && cd .. &&\
+    for repo in RTF YARP YCM iDynTree ; do \
         cd $repo ;\
         echo "Checking out $repo to ${BRANCH}" ;\
         git checkout ${BRANCH} ;\
