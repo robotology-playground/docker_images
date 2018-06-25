@@ -79,28 +79,23 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DROBOTOLOGY_ENABLE_CORE:BOOL=ON \
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
+        -DYCM_USE_DEPRECATED:BOOL=OFF \
         &&\
     cmake --build . --target update-all -- -j4 &&\
-    cd ../robotology &&\
-    cd ICUB && git checkout devel && cd .. &&\
-    cd GazeboYARPPlugins && git checkout devel && cd .. &&\
-    cd codyco-modules && git checkout devel && cd .. &&\
-    for repo in RTF YARP YCM iDynTree ; do \
-        cd $repo ;\
-        echo "Checking out $repo to ${BRANCH}" ;\
-        git checkout ${BRANCH} ;\
-        cd .. ;\
+    # Always use devel for these repos
+    for repo in ICUB GazeboYARPPlugins codyco-modules icub-tests ; do \
+        cd ../robotology/${repo};\
+        git checkout devel;\
+        cd ../../build;\
+        cmake -DYCM_EP_DEVEL_MODE_${repo}:BOOL=ON . ;\
     done &&\
-    cd ../build &&\
-    cmake . \
-        -DYCM_EP_DEVEL_MODE_GazeboYARPPlugins:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_ICUB:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_RTF:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_YARP:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_YCM:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_codyco-modules:BOOL=ON \
-        -DYCM_EP_DEVEL_MODE_iDynTree:BOOL=ON \
-        &&\
+    # Checkout $BRANCH for the remaining
+    for repo in RTF YARP YCM iDynTree ; do \
+        cd ../robotology/${repo} ;\
+        git checkout ${BRANCH} ;\
+        cd ../../build ;\
+        cmake -DYCM_EP_DEVEL_MODE_${repo}:BOOL=ON . ;\
+    done &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
     rm -f $HOME/.gitconfig &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
@@ -108,19 +103,6 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
 # The bashrc is read only when opening an interactive shell. Let other projects find packages contained
 # in the superbuild.
 ENV CMAKE_PREFIX_PATH=${PROJECTS_DIR}/robotology-superbuild/build/install
-
-# Install icub-tests
-RUN cd ${PROJECTS_DIR} &&\
-    git clone https://github.com/robotology/icub-tests &&\
-    cd icub-tests &&\
-    # git checkout ${BRANCH} &&\
-    git checkout devel &&\
-    mkdir build && cd build &&\
-    cmake ..\
-        -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-         &&\
-    cmake --build . --target install -- ${CMAKE_EXTRA_OPTIONS}
-ENV YARP_DATA_DIRS=${YARP_DATA_DIRS}:${PROJECTS_DIR}/icub-tests/suits
 
 # Enable CCACHE by default
 ENV PATH=/usr/lib/ccache:$PATH
