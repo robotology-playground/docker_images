@@ -81,7 +81,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
         -DYCM_USE_DEPRECATED:BOOL=OFF \
         # Select the tag for the shipped projects
-        -DYARP_TAG=${BRANCH} \
+        #-DYARP_TAG=${BRANCH} \
         -DYCM_TAG=${BRANCH} \
         -DRTF_TAG=${BRANCH} \
         -DiDynTree_TAG=${BRANCH} \
@@ -91,6 +91,13 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -Dcodyco-modules_TAG=devel \
         -Dicub-tests_TAG=devel \
         &&\
+    # Workaround for yarp 3
+    cmake --build . --target YARP-update &&\
+    cmake .. -DYCM_EP_DEVEL_MODE_YARP:BOOL=ON &&\
+    cd ../robotology/YARP &&\
+    git checkout ${BRANCH} &&\
+    cd ../../build &&\
+    # Build all the projects
     cmake --build . --target update-all -- -j4 &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
     rm -f $HOME/.gitconfig &&\
