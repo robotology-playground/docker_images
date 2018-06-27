@@ -80,22 +80,18 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
         -DYCM_USE_DEPRECATED:BOOL=OFF \
+        # Select the tag for the shipped projects
+        -DYARP_TAG=${BRANCH} \
+        -DYCM_TAG=${BRANCH} \
+        -DRTF_TAG=${BRANCH} \
+        -DiDynTree_TAG=${BRANCH} \
+        # Repo always in devel
+        -DICUB_TAG=devel \
+        -DGazeboYARPPlugins_TAG=devel \
+        -Dcodyco-modules_TAG=devel \
+        -Dicub-tests_TAG=devel \
         &&\
     cmake --build . --target update-all -- -j4 &&\
-    # Always use devel for these repos
-    for repo in ICUB GazeboYARPPlugins codyco-modules icub-tests ; do \
-        cd ../robotology/${repo};\
-        git checkout devel;\
-        cd ../../build;\
-        cmake -DYCM_EP_DEVEL_MODE_${repo}:BOOL=ON . ;\
-    done &&\
-    # Checkout $BRANCH for the remaining
-    for repo in RTF YARP YCM iDynTree ; do \
-        cd ../robotology/${repo} ;\
-        git checkout ${BRANCH} ;\
-        cd ../../build ;\
-        cmake -DYCM_EP_DEVEL_MODE_${repo}:BOOL=ON . ;\
-    done &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
     rm -f $HOME/.gitconfig &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
