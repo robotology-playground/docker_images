@@ -103,6 +103,9 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     rm -f $HOME/.gitconfig &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
 
+# Waiting https://github.com/robotology/robotology-superbuild/issues/95
+RUN echo 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX}/lib/rtf'  >> $ROBOTOLOGY_INITIALIZATION_FILE
+
 # The bashrc is read only when opening an interactive shell. Let other projects find packages contained
 # in the superbuild.
 ENV CMAKE_PREFIX_PATH=${PROJECTS_DIR}/robotology-superbuild/build/install
