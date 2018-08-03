@@ -70,37 +70,27 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/robotology-superbuild.git &&\
     cd robotology-superbuild &&\
     mkdir build && cd build &&\
-    git config --global user.email "tdd@robotology.com" &&\
-    git config --global user.name "DockerUser" &&\
     cmake .. \
         -G "$CMAKE_GENERATOR" \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        # -DNON_INTERACTIVE_BUILD:BOOL=ON \
+        -DNON_INTERACTIVE_BUILD:BOOL=ON \
         -DROBOTOLOGY_ENABLE_CORE:BOOL=ON \
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
         -DYCM_USE_DEPRECATED:BOOL=OFF \
         # Select the tag for the shipped projects
-        #-DYARP_TAG=${BRANCH} \
+        -DYARP_TAG=${BRANCH} \
         -DYCM_TAG=${BRANCH} \
-        -DRTF_TAG=${BRANCH} \
+        -DRTF_TAG=devel \
         -DiDynTree_TAG=${BRANCH} \
-        # Repo always in devel
-        -DICUB_TAG=devel \
-        -DGazeboYARPPlugins_TAG=devel \
-        -Dcodyco-modules_TAG=devel \
-        -Dicub-tests_TAG=devel \
+        -DICUB_TAG=${BRANCH} \
+        -DGazeboYARPPlugins_TAG=${BRANCH} \
+        -Dcodyco-modules_TAG=${BRANCH} \
+        -Dicub-tests_TAG=${BRANCH} \
         &&\
-    # Workaround for yarp 3
-    cmake --build . --target YARP-update &&\
-    cmake .. -DYCM_EP_DEVEL_MODE_YARP:BOOL=ON &&\
-    cd ../robotology/YARP &&\
-    git checkout ${BRANCH} &&\
-    cd ../../build &&\
     # Build all the projects
     cmake --build . --target update-all -- -j4 &&\
     cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
-    rm -f $HOME/.gitconfig &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
 
 # Waiting https://github.com/robotology/robotology-superbuild/issues/95
