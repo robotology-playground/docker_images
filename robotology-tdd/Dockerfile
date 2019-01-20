@@ -54,6 +54,7 @@ RUN apt-get update &&\
         coinor-libipopt-dev \
         # MISC
         libasio-dev \
+        libmatio-dev \
         &&\
     rm -rf /var/lib/apt/lists/*
 
