@@ -82,7 +82,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         # Select the tag for the shipped projects
         -DYARP_TAG=${BRANCH} \
         -DYCM_TAG=${BRANCH} \
-        -DRTF_TAG=devel \
+        -DRTF_TAG=${BRANCH} \
         -DiDynTree_TAG=${BRANCH} \
         -DICUB_TAG=${BRANCH} \
         -DGazeboYARPPlugins_TAG=${BRANCH} \
