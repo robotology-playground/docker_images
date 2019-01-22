@@ -19,6 +19,7 @@ RUN apt-get update &&\
         ninja-build \
         clang \
         ccache \
+        valgrind \
         &&\
     rm -rf /var/lib/apt/lists/*
 
