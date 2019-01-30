@@ -89,6 +89,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DGazeboYARPPlugins_TAG=${BRANCH} \
         -Dcodyco-modules_TAG=${BRANCH} \
         -Dicub-tests_TAG=${BRANCH} \
+        -DWBToolbox_TAG=${BRANCH} \
         &&\
     # Build all the projects
     cmake --build . --target update-all -- -j4 &&\
