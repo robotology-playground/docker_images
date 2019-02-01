@@ -71,6 +71,7 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/robotology-superbuild.git &&\
     cd robotology-superbuild &&\
+    sed -i "s/ProjectsTagsMaster/ProjectsTags$(python -c "print '$BRANCH'.capitalize()")/g" CMakeLists.txt &&\
     mkdir build && cd build &&\
     cmake .. \
         -G "$CMAKE_GENERATOR" \
@@ -80,16 +81,6 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
         -DYCM_USE_DEPRECATED:BOOL=OFF \
-        # Select the tag for the shipped projects
-        -DYARP_TAG=${BRANCH} \
-        -DYCM_TAG=${BRANCH} \
-        -DRTF_TAG=${BRANCH} \
-        -DiDynTree_TAG=${BRANCH} \
-        -DICUB_TAG=${BRANCH} \
-        -DGazeboYARPPlugins_TAG=${BRANCH} \
-        -Dcodyco-modules_TAG=${BRANCH} \
-        -Dicub-tests_TAG=${BRANCH} \
-        -DWBToolbox_TAG=${BRANCH} \
         &&\
     # Build all the projects
     cmake --build . --target update-all -- -j4 &&\
