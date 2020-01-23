@@ -3,10 +3,9 @@ FROM ${BASE_IMAGE}
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
 ARG GAZEBO_VER=9
-ARG BRANCH=master
 ARG BUILD_TYPE=Debug
-ARG CMAKE_GENERATOR="Unix Makefiles"
-ARG CMAKE_EXTRA_OPTIONS=-j2
+ARG PROJECT_TAGS="Stable"
+ARG CMAKE_GENERATOR="Ninja"
 
 RUN apt-get update &&\
     apt-get install -y \
@@ -71,20 +70,18 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     git clone https://github.com/robotology/robotology-superbuild.git &&\
     cd robotology-superbuild &&\
-    sed -i "s/ProjectsTagsMaster/ProjectsTags$(python -c "print '$BRANCH'.capitalize()")/g" CMakeLists.txt &&\
     mkdir build && cd build &&\
     cmake .. \
         -G "$CMAKE_GENERATOR" \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -DNON_INTERACTIVE_BUILD:BOOL=ON \
-        -DROBOTOLOGY_ENABLE_CORE:BOOL=ON \
+        -DROBOTOLOGY_PROJECT_TAGS=${PROJECT_TAGS} \
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
         -DROBOTOLOGY_USES_GAZEBO:BOOL=ON \
-        -DYCM_USE_DEPRECATED:BOOL=OFF \
+        -DNON_INTERACTIVE_BUILD:BOOL=ON \
         &&\
     # Build all the projects
-    cmake --build . --target update-all -- -j4 &&\
-    cmake --build . -- ${CMAKE_EXTRA_OPTIONS} &&\
+    cmake --build . --target update-all &&\
+    cmake --build . &&\
     echo "source ${PROJECTS_DIR}/robotology-superbuild/build/install/share/robotology-superbuild/setup.sh" >> $ROBOTOLOGY_INITIALIZATION_FILE
 
 # Waiting https://github.com/robotology/robotology-superbuild/issues/95
