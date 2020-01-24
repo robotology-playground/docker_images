@@ -51,17 +51,10 @@ jobs:
     - &robotologytddtemplate
       stage: robotology-tdd
       env:
-        - DOCKER_BASE_IMAGE="ubuntu:xenial"
-        - DOCKER_IMAGE_TAG="gazebo8master"
-        - GAZEBO_VER=8
-        - BRANCH=master
-        - CMAKE_GENERATOR="Unix Makefiles"
-    - <<: *robotologytddtemplate
-      env:
         - DOCKER_BASE_IMAGE="ubuntu:bionic"
         - DOCKER_IMAGE_TAG="gazebo9master"
         - GAZEBO_VER=9
-        - BRANCH=master
+        - PROJECT_TAGS="Stable"
         - CMAKE_GENERATOR="Unix Makefiles"
         - IS_LATEST=true
     # -----
@@ -69,15 +62,8 @@ jobs:
     # -----
     - <<: *robotologytddtemplate
       env:
-        - DOCKER_BASE_IMAGE="ubuntu:xenial"
-        - DOCKER_IMAGE_TAG="gazebo8devel"
-        - GAZEBO_VER=8
-        - BRANCH=devel
-        - CMAKE_GENERATOR="Unix Makefiles"
-    - <<: *robotologytddtemplate
-      env:
         - DOCKER_BASE_IMAGE="ubuntu:bionic"
         - DOCKER_IMAGE_TAG="gazebo9devel"
         - GAZEBO_VER=9
-        - BRANCH=devel
+        - PROJECT_TAGS="Unstable"
         - CMAKE_GENERATOR="Unix Makefiles"
