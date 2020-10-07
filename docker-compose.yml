@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
 
-  robotology-tdd_gazebo11master:
+  robotology-tdd_stable:
     build:
       args:
         BASE_IMAGE: ubuntu:focal
@@ -12,9 +12,9 @@ services:
         BUILD_TYPE: Debug
       context: ./robotology-tdd/
       dockerfile: Dockerfile
-    image: robotology/robotology-tdd:gazebo11master
+    image: robotology/robotology-tdd:stable
 
-  robotology-tdd_gazebo11devel:
+  robotology-tdd_unstable:
     build:
       args:
         BASE_IMAGE: ubuntu:focal
@@ -24,4 +24,4 @@ services:
         BUILD_TYPE: Debug
       context: ./robotology-tdd/
       dockerfile: Dockerfile
-    image: robotology/robotology-tdd:gazebo11devel
+    image: robotology/robotology-tdd:unstable
