@@ -1,0 +1,63 @@
+name: Docker Images
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Execute a weekly build on Monday at 2AM UTC
+    - cron:  '0 2 * * 1'
+
+jobs:
+  robotology-tdd:
+
+    name: 'robotology-tdd:${{ matrix.tag }}'
+    env:
+      IMAGE_NAME: robotology-tdd
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag:
+          - gazebo11master
+          - gazebo11devel
+
+    steps:
+
+      # Use the branch that triggered the workflow for push and pull_request events
+      - uses: actions/checkout@master
+        if: github.event_name != 'schedule'
+
+      # Use master branch for scheduled builds
+      - uses: actions/checkout@master
+        with:
+          ref: 'refs/heads/master'
+        if: github.event_name == 'schedule'
+
+      - name: Build
+        run: docker-compose build ${IMAGE_NAME}_${{ matrix.tag }}
+
+      - name: Login
+        if: |
+          github.repository == 'robotology-playground/docker_images' &&
+          github.event_name != 'pull_request' &&
+          (github.event_name == 'schedule' || github.ref == 'refs/heads/master')
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
+
+      - name: Push
+        if: |
+          github.repository == 'robotology-playground/docker_images' &&
+          github.event_name != 'pull_request' &&
+          (github.event_name == 'schedule' || github.ref == 'refs/heads/master')
+        run: docker push robotology/${IMAGE_NAME}:${{ matrix.tag }}
+
+      - name: Push latest
+        if: |
+          matrix.tag == 'gazebo11master' &&
+          github.repository == 'robotology-playground/docker_images' &&
+          github.event_name != 'pull_request' &&
+          (github.event_name == 'schedule' || github.ref == 'refs/heads/master')
+        run: |
+          docker tag robotology/${DOCKER_IMAGE}:${{ matrix.image }} robotology/${DOCKER_IMAGE}:latest
+          docker push robotology/robotology-tdd:latest

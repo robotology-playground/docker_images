@@ -1,0 +1,27 @@
+version: '3.0'
+
+services:
+
+  robotology-tdd_gazebo11master:
+    build:
+      args:
+        BASE_IMAGE: ubuntu:bionic
+        GAZEBO_VER: 11
+        CMAKE_GENERATOR: Ninja
+        PROJECT_TAGS: Stable
+        BUILD_TYPE: Debug
+      context: ./robotology-tdd/
+      dockerfile: Dockerfile
+    image: robotology/robotology-tdd:gazebo11master
+
+  robotology-tdd_gazebo11devel:
+    build:
+      args:
+        BASE_IMAGE: ubuntu:bionic
+        GAZEBO_VER: 11
+        CMAKE_GENERATOR: Ninja
+        PROJECT_TAGS: Unstable
+        BUILD_TYPE: Debug
+      context: ./robotology-tdd/
+      dockerfile: Dockerfile
+    image: robotology/robotology-tdd:gazebo11devel
