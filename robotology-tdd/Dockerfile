@@ -11,6 +11,14 @@ RUN apt-get update &&\
     apt-get install -y apt-transport-https ca-certificates gnupg software-properties-common wget &&\
     rm -rf /var/lib/apt/lists/*
 
+ARG TZ=Europe/Rome
+ARG DEBIAN_FRONTEND=noninteractive
+RUN rm -f /etc/localtime &&\
+    ln -s /usr/share/zoneinfo/"${TZ}" /etc/localtime &&\
+    apt-get update &&\
+    apt-get install -y --no-install-recommends locales locales-all tzdata &&\
+    rm -rf /var/lib/apt/lists/*
+
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add - && \
     apt-add-repository "deb https://apt.kitware.com/ubuntu/ `lsb_release -cs` main" &&\
     apt-get install -y kitware-archive-keyring &&\
