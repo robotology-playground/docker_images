@@ -5,7 +5,7 @@ services:
   robotology-tdd_gazebo11master:
     build:
       args:
-        BASE_IMAGE: ubuntu:bionic
+        BASE_IMAGE: ubuntu:focal
         GAZEBO_VER: 11
         CMAKE_GENERATOR: Ninja
         PROJECT_TAGS: Stable
@@ -17,7 +17,7 @@ services:
   robotology-tdd_gazebo11devel:
     build:
       args:
-        BASE_IMAGE: ubuntu:bionic
+        BASE_IMAGE: ubuntu:focal
         GAZEBO_VER: 11
         CMAKE_GENERATOR: Ninja
         PROJECT_TAGS: Unstable
