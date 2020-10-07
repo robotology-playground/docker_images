@@ -2,7 +2,7 @@ ARG BASE_IMAGE=ubuntu:bionic
 FROM ${BASE_IMAGE}
 MAINTAINER Diego Ferigo <diego.ferigo@iit.it>
 
-ARG GAZEBO_VER=9
+ARG GAZEBO_VER=11
 ARG BUILD_TYPE=Debug
 ARG PROJECT_TAGS="Stable"
 ARG CMAKE_GENERATOR="Ninja"
@@ -57,6 +57,7 @@ RUN apt-get update &&\
         # GAZEBO-YARP-PLUGINS
         libatlas-base-dev \
         # IDYNTREE
+        libxml2-dev \
         coinor-libipopt-dev \
         # MISC
         libasio-dev \
@@ -78,7 +79,7 @@ RUN mkdir ${PROJECTS_DIR} && cd ${PROJECTS_DIR} &&\
     cd robotology-superbuild &&\
     mkdir build && cd build &&\
     cmake .. \
-        -G "$CMAKE_GENERATOR" \
+        -G "${CMAKE_GENERATOR}" \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DROBOTOLOGY_PROJECT_TAGS=${PROJECT_TAGS} \
         -DROBOTOLOGY_ENABLE_DYNAMICS:BOOL=ON \
